@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+					
+		<!-- Include Bootstrap 4 CSS -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+		
+		<!-- Include Font Awesome 5 -->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+		
+		
+		<title>PBS 85 — Challenge Response</title>
+
+	</head>
+	<body>
+	<!-- The Page header (a Jumbotron) -->
+	<header class="container mt-5">
+		<div class="jumbotron">
+			<h1 class="display-4">PBS 85 Challenge Response<br><small class="text-muted">Bootstrap Cards (deux)</small></h1>
+
+			<p class="lead">The challenge response for installment 85 of the <a href="https://bartb.ie/pbs" target="_blank" rel="noopener">Programming by Stealth</a> series.</p>
+		</div>
+	</header>
+
+	<!-- The main page body -->
+	<main class="container mb-5">
+	Data is obtained from the Exchange rates API. This is a free service for current and historical foreign exchange rates
+	published by the <a href="https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html">European Central Bank</a> (ECB).
+	<br><br>
+	
+	<div class="container-fluid p-5">
+		<fieldset class="form" role="form" aria-labelledby="cb_fm_desc">
+			<legend id="cb_fm_desc">Select countries to display:</legend>
+			<form action="javascript:void(0);" id="cb_fm">
+				<div class="row form-group p-3 mb-4" id="cb_div" role="checkboxgroup" aria-labelledby="country_cbx_desc">
+					<!-- check boxes added in here -->
+				</div>
+				<div>
+					<button id="select_btn" class="btn btn-primary btn-sm mb-1 ml-2">Select</button>
+					<button id="select_all_btn" class="btn btn-primary btn-sm mb-1 ml-2">Select All</button>
+					<button id="clear_btn" class="btn btn-primary btn-sm mb-1 ml-2">Clear</button>
+				</div>
+			</form>
+
+		</fieldset>
+	</div>
+
+	<!-- 
+	<div class="row p-3">
+		<fieldset class="col form" role="form" aria-labelledby="feedback_fm_desc">
+			<legend id="feedback_fm_desc">Select countries to include:</legend>
+						
+			<form action="javascript:void(0);" id="feedback_fm">
+
+				<div id="cb_div" class="form-group" role="checkboxgroup" aria-labelledby="country_cbx_desc">
+					check boxes added in here -->
+<!---
+				</div>
+				<button id="select_btn" class="btn btn-primary btn-sm mb-1 ml-2">Select</button>
+				<button id="select_all_btn" class="btn btn-primary btn-sm mb-1 ml-2">Select All</button>
+				<button id="clear_btn" class="btn btn-primary btn-sm mb-1 ml-2">Clear</button>
+
+			</form>
+		</fieldset>
+	</div>
+	--->
+
+	<div class="p-3">
+		<fieldset role="form" aria-labelledby="addCardSelectBox">
+			<legend class="h4" id="addCardSelectBox">Select a currency to display</legend>
+
+			<label>
+				Currency:
+				<select class="ml-2" id="addCardSelect"></select>
+			</label>
+
+			<button id="add_btn" class="btn btn-primary btn-sm mb-1 ml-2">Add</button>
+
+		</fieldset>
+	</div>
+	
+	<!-- put date of last currency fetch here -->
+	<div id="rate_date_div">
+	</div>
+	<br>
+	
+	<!-- put any errors here -->
+	<div id="output_div"></div>
+
+	<div class="card-deck" id="card_deck_div">
+		<!-- First card -->
+		
+	</div>
+	
+	<!-- revision date container -->
+	<div class="container">
+		<div class="row">	<!-- outer container, row 8> -->
+			<div class="col-12">	<!-- outer container, col 1> -->
+				<aside class="float-right text-muted p-2 mt-5 bg-light border rounded">
+				<p class="p-1 d-inline font-weight-light align-right" style="font-size: 10pt"> Last modified on:</p>
+				<p class="d-inline font-weight-light align-right" style="font-size: 10pt">12/12/2019</p>
+				</aside>
+			</div>		<!-- outer container, end of col> -->
+		</div>		<!-- outer container, end of row 8> -->
+	</div>
+	
+	</main>
+	</body>
+	
+	<!-- Import the is.js micro checking library -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/is_js/0.9.0/is.min.js" integrity="sha256-lnJeulOa3e5IO2EzHr8jKJ3CbT80MBwkS5a+n2ooIr4=" crossorigin="anonymous"></script>
+
+	<!-- Include Bootstrap JavaScript from CDNs -->
+	<script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+	<!-- Include Mustache.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js" integrity="sha256-srhz/t0GOrmVGZryG24MVDyFDYZpvUH2+dnJ8FbpGi0=" crossorigin="anonymous"></script>
+
+	<!-- Custom JS Code -->
+	<script type="text/javascript">
+	// ******************************************************
+	// Global variables
+	// ******************************************************
+	let errData = 0;		// stash error object here
+	
+	// variables needed for display
+	let RATES = [];			// array of exchange rates/base country	
+	let countryDataFile = {};	// country data read from file
+	let cardTemplateStr = "";	// Mustache template string for cards read from file
+	let cbTemplateStr = "";		// Mustache template string for checkbox read from file
+	
+	let selectedCountries = {};	// dictionary of countries selected from checkboxes
+	let countries = [];		// country data for Mustache to use is here
+							// builds up as Add button is clicked
+							
+	let newCountry = 0;		// country selected to add
+	let countryCount = 0;	// number of cards displayed
+	let countryObj = {};	// new country object, created by BCD
+	let cardDeckInfo = "";	// rendered Mustache data
+	
+	let ecbData = 0;
+	let xx1 = {};
+	let xx2 = {};
+	let xx3 = {};
+
+	// ******************************************************
+	// a jQuery Document Ready Event Handler
+	// ******************************************************
+	$(async function(){
+	
+	// constants
+	const ERRMSG = 0;
+	const PRIMSG = 1;
+	const MAX_COUNTRIES = 5;		// maximum number of cards we want to display
+	
+	const UNKNOWN_NAME = "<unk>";
+	const UNKNOWN_LONG_NAME = "<unknown>";
+	const UNKNOWN_FLAG_IMAGE_FILE = "flags/unknown.png";
+	const UNK_RATE = "<unk>";
+	const UNK_COUNTRY_DATA = {
+		"UNK": {
+			"name": "UNK",
+			"flagImage": UNKNOWN_FLAG_IMAGE_FILE,
+			}
+	};
+
+	const $outputDiv = $('#output_div');			// where to put error/status messages
+	const $CARD_DECK = $('#card_deck_div');			// card deck div 
+	const $COUNTRY_SELECT = $('#addCardSelect');	// country select list goes here
+	const $CB_DIV = $('#cb_div');					// where to put check boxes
+	const $SELECT_BTN = $('#select_btn');			// select button widget
+	const $SELECT_ALL_BTN = $('#select_all_btn');	// select all button widget
+	const $CLEAR_BTN = $('#clear_btn');				// clear button widget
+
+	// ******************************************************
+	// helper functions
+	// ******************************************************
+	// --------------------------------------
+	// Extract file/URL data from error data -->
+	// IN: error object from catch
+	// OUT: string
+	// --------------------------------------
+	function parseErrorResponse (errObj) {
+		//console.log (`PER: error statusText is ${errObj.statusText}`);
+		//console.log (`PER: error responseText is ${errObj.responseText}`);
+		let s1 = "";
+		let ss1 = [];
+		let ss2 = [];
+		try {
+			s1 = errObj.responseText;
+			ss1 = s1.split("<p>");		// remove first part of error response
+			ss2 = ss1[1].split("</p>");	// remove last part of error response
+		} catch {
+			ss2[0] = errObj.responseText;
+		}
+		console.log (`PER: ${ss2}`);
+		
+		return ss2[0];
+	}
+	
+	// --------------------------------------------
+	// Provide error response & display message -->
+	// IN: error object from catch, operation text to go in error message
+	// OUT: resulting error message
+	// --------------------------------------
+	function processErrorCondition (errD, opText, errSource) {
+		errData = errD;		// put error object in global variable for console access
+		errDetail = "";
+		
+		console.log(`PEC: In catch`);
+		console.log(`PEC: errData: ${errD}, type is ${typeof errD}`);
+
+		// if no responseText
+		if (errD.responseText == undefined) {
+
+			//if no responseText, try statusText, if that's not there, use message object as is
+			if (errD.statusText == undefined) {
+				errDetail = errD;			// use error return as is
+			} else {
+				errDetail = errD.statusText;
+			}
+
+		} else {	// if is a file error
+			errDetail = parseErrorResponse(errD);	// extract file name from error data
+		}
+		console.log(`PEC: Promises rejected: ${errDetail}`);
+
+		displayStatusMessage(errSource, errDetail, opText, ERRMSG);
+		
+		return errDetail;
+	}
+
+	// --------------------------------------
+	// display primary and error messages -->
+	// --------------------------------------
+	function displayStatusMessage(sTxt, eTxt, fType, mType){
+		
+		console.log (`DSM: error is ${eTxt}`);
+		// <!-- primary message Mustache template
+		const priTemplate = "<div class=\"alert alert-primary border border-primary rounded mb-3\"> {{message}} {{> closeBtn}}</div>";
+		// <!-- error message Mustache template partials -->
+		const errTemplate = "<div class=\"alert alert-danger border border-danger rounded mb-3\"> {{message}} {{> closeBtn}}</div>"
+		// <!-- error message Mustache template partials -->
+		const partials = "closeBtn: \'<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\'";
+
+		let ajaxErrMsg = "";
+		let tmplt = 0;
+
+		// remove any existing messages
+		//$outputDiv.empty().text(' ');		// clear out the previous error messages
+
+		if (mType ==ERRMSG) {
+			// if an error message
+			tmplt = errTemplate;
+			ajaxErrMsg = `Error (${fType}): status: (${sTxt}), Error message = ${eTxt}`;
+
+		} else {
+			// if a primary message
+			tmplt = priTemplate;
+			ajaxErrMsg = `Alert (${fType}): status: OK, Message = ${eTxt}`;
+
+		}
+		//window.alert (ajaxErrMsg);
+		//console.log (`DSM ERROR: ${ajaxErrMsg}`);
+		
+		const $alert = $(Mustache.render(tmplt, { message: ajaxErrMsg }, partials));
+		$alert.alert({});
+		//console.log ("DSM: append message to output div ");
+		$outputDiv.append($alert);
+
+		return;
+	}
+	
+	// --------------------------------------
+	// Fetch Mustache template from local file.    -->
+	// load templates & data from local file
+	// IN: nothing
+	// OUT: Promise.all promise
+	// ------------------------------------------------
+	async function loadTemplateAndData () {
+		console.log ("Enter LTAD");
+		// fetch template for card
+		const prm1 = $.ajax({
+					url: "data/pbs85-template1.txt", 		// REQUIRED
+					method: 'GET', 		// the HTTP method to use, defaults to GET
+					cache: false, 		// whether or not to allow caching, defaults to true
+					data: { },			// the form data to send to the server as a dictionary
+					dataType: 'text'	// one of 'text', 'html', or 'json' (for now)
+				});
+
+		// fetch updated template for checkboxes
+		const prm2 = $.ajax({
+					url: "data/pbs85-template3.txt", 		// REQUIRED
+					method: 'GET', 		// the HTTP method to use, defaults to GET
+					cache: false, 		// whether or not to allow caching, defaults to true
+					data: { },			// the form data to send to the server as a dictionary
+					dataType: 'text'	// one of 'text', 'html', or 'json' (for now)
+				});
+
+
+		// fetch country data
+		const prm3 = $.ajax({
+					url: "data/Countries.txt", 		// REQUIRED
+					method: 'GET', 		// the HTTP method to use, defaults to GET
+					cache: false, 		// whether or not to allow caching, defaults to true
+					data: { },			// the form data to send to the server as a dictionary
+					dataType: 'text'	// one of 'text', 'html', or 'json' (for now)
+				});
+
+		console.log (`LTAD: after ajax calls, before return with Promise.all.`);
+		const prArray = [prm1, prm2, prm3];	// make array of promises
+
+		return Promise.all(prArray);	// return 1 promise for all
+
+	}
+
+	// -------------------------------------------------------
+	// Fetch currency conversion data from ECB website.    -->
+	// IN: base country array
+	// OUT: array of promises for fetching rate data
+	// -------------------------------------------------------
+	async function loadExchangeRates (country) {
+		console.log (`Enter LER with ${country}`);
+		//console.log (cntriesObj);
+		
+		const ecbPromises = [];
+
+		//console.log (`LER: request data for country ${country}`);
+
+		// create URL
+		//console.log (`LER: create URL for ${country}`);
+		const ecbUrl = "https://api.exchangeratesapi.io/latest?base="+country;
+
+		//console.log (`LER: URL is ${ecbUrl}`);
+		
+		// do the AJAX & save promise in array
+		const ecbPromise = $.ajax({
+			url: ecbUrl,
+			method: 'GET',
+			cache: false, 		// whether or not to allow caching, defaults to true
+			dataType: 'json'
+		}).then(function(rates){
+			return rates; // pass the rates through
+			}
+		);
+		ecbPromises.push(ecbPromise);
+
+		//console.log ("LER: after ajax call");
+		//console.log (`Exit LER`);
+
+		return Promise.all(ecbPromises);
+		}
+
+	// --------------------------------------
+	// Build data object for Mustache.    -->
+	// take selected country data read from external file & create data object for Mustache
+	// IN: dictionary element from JSON Object Array from local file
+	// OUT: base country HTML data keyed to Mustache template
+	// --------------------------------------
+	function buildCardData (countryObj) {	// for selected country
+		console.log ("Enter BCD...");
+
+		const cntry = countryObj.name;
+		console.log (`BCD: add country ${cntry}`);
+
+		// do some error checking here
+
+		// RATES must have data
+		console.log ("BCD: check RATES");
+		if (RATES[cntry] == undefined){
+			throw new TypeError(`No exchange rate data available for ${countryObj.longName}`);
+		}
+
+		// Check country data has valid values
+		let fi = countryObj.flagImage;		
+		if (fi == undefined) {
+			fi = UNKNOWN_FLAG_IMAGE_FILE;
+		}
+
+		// Handle case where no country name defined
+		let nm = countryObj.name;		
+		if (nm == undefined) {
+			nm = UNKOWN_NAME;		// no country data found
+		}
+		
+		// Handle case where no country long name defined
+		let lnm = countryObj.longName;		
+		if (lnm == undefined) {
+			lnm = UNKNOWN_LONG_NAME;
+		}
+
+		// Create base country object with
+		//	name
+		//	alt flag name (name + " flag")
+		//	flag file path
+		let bObj = new Object;			// create base country object
+		bObj.name = nm;					// add name
+		bObj.longname = lnm;			// add long name for currency
+		bObj.altName = nm + " flag";	// add alt-name
+		bObj.flagImage = fi;			// add flag file name
+		bObj.date = RATES[cntry].date;	// add rate date
+
+		// Need to create rates array for this base country
+		let rArray = [];				// Create empty rates array
+				
+		// For each country data object
+		xx3 = Object.values(selectedCountries).sort();
+		Object.keys(selectedCountries).sort().forEach(function(do2){
+			xx1 = selectedCountries[do2];
+
+			// don't put base country in rates array because duh it's the base
+			if (do2 != cntry){			// if base country NE to rate object name
+				// verify THIS country data is good
+				let fi2 = selectedCountries[do2].flagImage;		
+				if (fi2 == undefined) {
+					fi2 = UNKNOWN_FLAG_IMAGE_FILE;
+				}
+
+				// Handle case where no country name defined
+				let nm2 = selectedCountries[do2].name;		
+				if (nm2 == undefined) {
+					nm2 = do2;
+				}
+				
+				// Handle case where no country long name defined
+				let lnm2 = selectedCountries[do2].longName;		
+				if (lnm2 == undefined) {
+					lnm2 = UNKNOWN_LONG_NAME;
+				}
+
+				// create rate object from:
+				//		name
+				//		flag file path
+				//		rate from RATES[base country ridx].rates[name]
+				
+				let rObj = new Object;		// create empty rate object
+				rObj.name = nm2;
+				rObj.longname = lnm2;
+				rObj.flagImage = fi2;
+				if (RATES[cntry].rates[nm2] == undefined) {
+					rObj.rate = UNK_RATE;
+				} else {
+					// fetch this country's exchange rate from ECB data & truncated to 4 decimals
+					rObj.rate = RATES[cntry].rates[nm2].toFixed(4);
+				}
+				//console.log (`BCD: cntry is ${cntry}, do2 is ${do2}, nm2 is ${nm2}, rate is ${rObj.rate}`);
+
+				//	add new rate object to rates array
+				rArray.push(rObj);
+			}		// endif
+		});		// end for
+		// now have a rates array. put it in base country object
+		bObj.rateEtc = rArray;
+
+		xx2 = bObj;
+		return bObj;
+	}
+			
+	// -------------------------------------------------------
+	// Build country select list from country data read    -->
+	// IN: JSON Object Array from local file
+	// OUT: add country card select list set in HTML
+	// -------------------------------------------------------
+	function buildCountrySelectList (dataObj) {
+		console.log ("Enter BCSL...");
+		
+		// do some error checking here
+		// input must be object of array
+		// is input an object? And does it have some stuff in it?
+		//console.log ("BCSL: check dataObj");
+		if ((typeof dataObj != "object") || (Object.keys(dataObj).length) <= 0) {
+			throw new TypeError('(BCSL) Countries file has bad data');
+		}
+
+		// loop through each country read from data file, in alpha order
+		Object.keys(dataObj).sort().forEach(function(cntry){
+
+			// if a valid country here, add check box to display
+			let cn = dataObj[cntry].name;			// get short name
+			if (cn != undefined) {
+					
+				let clong = dataObj[cntry].longName;	// get long name
+				// add CB to display
+				$COUNTRY_SELECT.append($('<option>').text(clong).val(cn));
+			} else {
+				console.log (`BCSL: discard a country: ${cntry}`);
+			}
+		});
+		
+		//console.log (`BCSL: ${dataObj[0].name}`); 	// uncomment to make error
+		//console.log ("Exit BCSL");
+	}
+	
+	// --------------------------------------
+	// Remove specified country from countries array   -->
+	// IN: country code/name
+	// OUT: Updated array
+	// --------------------------------------
+	function removeCountry (countryObj) {	// for selected country
+	
+		// locate index of country to be removed in countries array
+		for (let idx=0; idx < countries.length; idx++) {
+			if (countryObj === countries[idx].name) {
+				countries.splice (idx,1);		// remove it
+				break;
+			}
+		}
+		
+	}
+	
+	// --------------------------------------
+	// Build checkboxes                   -->
+	// take selected country data read from external file & 
+	//		create set of checkboxes
+	// IN: dictionary element from JSON Object Array from local file
+	// OUT: base country HTML data keyed to Mustache template
+	// --------------------------------------
+	function buildCountrySelection (fileData) {
+	
+		// loop over each country, using key
+		Object.keys(fileData).sort().forEach(function(cntry){
+			//console.log (`BCS: Add CB (key ${cntry}) for ${fileData[cntry].name}`);
+			let countryObj = fileData[cntry];
+						
+			// if have valid data for this country, add a check box
+			if ((countryObj.name != undefined) && (countryObj.flagImage != undefined)) {
+				//console.log (`BCS: add check box for ${countryObj.name}`);
+				const $cb = $(Mustache.render(cbTemplateStr, countryObj));
+				$CB_DIV.append($cb);		// add to display page
+			}
+			
+		});
+	};
+
+	//---------------------------------------------------
+	// add a click handler to the Select button
+	//---------------------------------------------------
+	$SELECT_BTN.click(function(){
+		// clear any previous errors
+		$outputDiv.empty();
+
+		let $countryOptions = $('#cb_div input[name="country"]');
+
+		selection = $countryOptions;		// put in global var so we can see it from console
+		
+		try {
+			if($countryOptions.filter(':checked').length < 2){
+				throw new TypeError('(SEL) User must select at least 2 countries');
+
+				return;
+			}
+			
+			// loop through all possible countries that can be selected
+			for (let idx=0; idx < $countryOptions.length; idx++) {
+				let cObj = $countryOptions[idx];
+				let cName = cObj.value;
+
+				// If this country was selected, add its data object to selected country object
+				if (cObj.checked) {
+					let cc = countryDataFile[cName];
+					selectedCountries[cName] = cc;
+					//console.log (`${cName} was selected`);
+				} else {
+					// country is not selected, so remove it from dictionary
+					delete selectedCountries[cName];
+					//console.log (`${cName} was removed`);
+				}
+			}
+		} catch (err) {
+			const errDetail = processErrorCondition (err,"user input", "user");
+			console.log ('(SEL) User must select at least 2 countries');
+		}
+
+		return;
+
+	});
+
+	//---------------------------------------------------
+	// add a click handler to the Select All button
+	//---------------------------------------------------
+	$SELECT_ALL_BTN.click(function(){
+		console.log ('select all button clicked');
+		let $countryOptions = $('#cb_div input[name="country"]');
+
+		selection = $countryOptions;		// put in global var so we can see it from console
+					
+		// loop through all possible countries that can be selected
+		for (let idx=0; idx < $countryOptions.length; idx++) {
+			let cObj = $countryOptions[idx];
+			let cName = cObj.value;
+
+			cObj.checked = true;			// make this CB checked
+			
+			// add its data object to selected country object
+			let cc = countryDataFile[cName];	// get associated data
+			selectedCountries[cName] = cc;	// add to dictionary of selected countries
+			//console.log (`${cName} was selected`);
+		}
+		return;
+
+	});
+	
+	//---------------------------------------------------
+	// add a click handler to the Clear Selection button
+	//---------------------------------------------------
+	$CLEAR_BTN.click(function(){
+		console.log ('clear button clicked');
+
+		let $countryOptions = $('#cb_div input[name="country"]');
+
+		selection = $countryOptions;		// put in global var so we can see it from console
+	
+		// if have some selections, clear them
+		if($countryOptions.filter(':checked').length > 1){
+			// loop through all possible countries that can be selected
+			for (let idx=0; idx < $countryOptions.length; idx++) {
+				let cObj = $countryOptions[idx];
+				// If this country was selected, add its data object to selected country array
+				if (cObj.checked) {
+					cObj.checked = false;
+					//console.log (`${cObj.value} was cleared`);
+				}
+			}
+			
+			// empty selection dictionary
+			selectedCountries = {};
+		}
+
+	});
+
+	// ******************************************************
+	// Main Document Handler
+	// ******************************************************	
+	console.log ("start DOM");
+	
+	//---------------------------------------------------
+	// Initialization
+	//---------------------------------------------------
+	// assume all data will retrieve without error
+	//displayStatusMessage("Data Retrieval", "All data fetched properly", "get data", PRIMSG);
+
+	//---------------------------------------------------
+	// Fetch external data with AJAX in parallel	
+	//---------------------------------------------------
+	// Call function to fetch country data & build arrays
+	// Wait on promise completion
+	try{
+		console.log ("call LTAD");
+		let fileData = [];
+		fileData = await loadTemplateAndData();
+		console.log ("return from LTAD & await load templates & data");
+
+		// copy template strings into global vars
+		cardTemplateStr = fileData[0];		// card template
+		cbTemplateStr = fileData[1];		// check box template
+		
+		// convert input string to JSON object
+		countryDataFile = JSON.parse(fileData[2]);
+		
+		//console.log (`template is ${cardTemplateStr}`);
+		
+		// add in check boxes for country selection
+		buildCountrySelection(countryDataFile);
+		
+		// Build select list for choosing what countries are base
+		console.log ("call buildCountrySelect");
+		buildCountrySelectList(countryDataFile);
+
+
+	} catch (err) {
+		const errDetail = processErrorCondition (err,"get template/country data", "AJAX");
+		console.log (`Unable to get template and/or country data: ${errDetail}`);
+
+		// define a dummy template & country data
+		cardTemplateStr = "";
+		countryDataFile = UNK_COUNTRY_DATA;
+	} 
+
+	//---------------------------------------------------
+	// add a click handler to the Add button
+	//---------------------------------------------------
+	$('#add_btn').click(async function(){
+		// clear any previous errors
+		$outputDiv.empty();
+		
+
+		newCountry = $COUNTRY_SELECT.val();		// get selected country's code from select widget
+		
+		let newCountryLong = countryDataFile[newCountry].longName;
+		console.log (`add button clicked. Val is ${newCountry}, country selected is ${newCountryLong}`);
+		
+		try {
+			// verify user data is valid
+			if (Object.keys(selectedCountries).length <= 0) {
+				throw new TypeError(`User must select countries to display`);
+
+			}
+
+			// is this country already displayed?
+			for (let idx=0; idx < countries.length; idx++) {
+				if (newCountry == countries[idx].name) {
+					throw new TypeError(`Selected country currency, ${newCountryLong}, is already displayed`);
+				}
+			}
+			
+			// verify don't have too many cards (error if current # of cards EQ # countries in selectedCountries, IOW # keys)
+			// throw error if yes
+			if (countryCount >= MAX_COUNTRIES) {
+				throw new TypeError('Maximum number of currencies already displayed');
+			}
+			
+			countryCount++;			// keep track of how many country currencies are displayed
+			
+			// get rate info with selected country as base from ECB
+			try{
+				console.log ("call LER");
+				ecbData = await loadExchangeRates(newCountry);
+				console.log ("return from await exchange rates");
+				RATES[newCountry] = ecbData[0];
+				//ecbData = rates;
+
+			} catch (err) {
+				const errDetail = processErrorCondition (err,`get ECB data for ${newCountryLong}`, "AJAX");
+				console.log (`Unable to get ECB data: ${errDetail}`);		
+			} 
+
+			// create the data card
+			console.log ('create the data card');
+			let countryObj = buildCardData (countryDataFile[newCountry]);
+			xx1 = countryObj;		// debug
+
+			countries.push(countryObj);
+			
+			// Render data object into html using Mustache
+			console.log ('Mustache render card data into html');
+
+			cardDeckInfo = $(Mustache.render(cardTemplateStr, countryObj));
+			
+			// Append the html to the card deck
+			console.log ('append html to card deck');
+
+			$CARD_DECK.append(cardDeckInfo);		// add it to display
+			
+			
+			// set up the dismiss button response
+			// add dismiss button click function to each card
+			console.log(`Add click function for ${countryObj.name}`);
+			
+			$(`#${countryObj.name}-btn`).click(function(){
+				if (countryCount > 0) {
+					--countryCount;		// decrement # countries displayed
+				}
+				// remove dismissed card from array of displayed countries
+				removeCountry(countryObj.name);		
+				console.log (`Dismiss ${countryObj.name}`);
+				$(`#${countryObj.name}`).remove();
+			});
+	
+		} catch (err) {
+			const errDetail = processErrorCondition (err,"user input", "user");
+			console.log (`Unable to process user input: ${errDetail}`);
+		}
+
+
+	});
+	
+		
+	});
+	</script>
+		
+</html>

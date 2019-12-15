@@ -1,0 +1,76 @@
+Option 1: <== DO THIS
+
+- start with empty page, just Add textbox
+- set number of cards allowed to # specified in Countries.txt (because has all the data for a card)
+- Add textbox ("Enter country"): 
+	- should be submit type entry
+	- include list of valid countries. Need pull-down list?
+	- Return or Enter kicks off process
+		- verify entry is valid (i.e. in list from Countries.txt, countryData dictionary)
+			- actually might not need if do select list built from countryData
+			- how to check if key exists in object
+			- throw error if wrong
+		- verify don't have too many cards (error if current # of cards EQ # countries in countryData, IOW # keys)
+			- throw error if yes
+		- need to check data entry validation techniques from previous lessons
+		- locate country in countryData (dictionary)
+		- Build the data object (like countries.baseCountry[x])
+		- Render data object into html using Mustache
+		- Append the html to the card deck
+		- set up the dismiss button response
+	- 
+- Move guts of BuildMustacheData function into new function: BuildCardDAta (countryData object) - DONE
+
+- Remove isBase field from code & Countries file - DONE
+
+
+
+- Modify mustache template to remove outer loop. Only need outer decorations & inner loop
+
+Plan of Attack:
+
+1. Add "add" stuff & JS to make it work (i.e. get data into browser)
+	- see PBS32 on how to make a DOM-built select list
+	- have error block to display errors. 
+2. Remove current add card stuff, so initially page is empty
+3. Create BuildCardData
+4. Create click function for Add select list to make card, render it, & display it
+4a. Remove array 'countries'. Rename 'countriesX'
+4b. Remove array 'RATES', Rename 'RATESx'
+4c. Remove isbase field
+4d. Clear error on next Add button click
+4e. remove unused functions & vars
+4f. put date into card
+4g. comment out debug console logs
+
+all above done
+
+5. Test all error conditions
+	- bad country, country not found in ECB data
+	- flag image failure (error in console log, catch error?)
+	- URL/AJAX failure
+	- no template file
+	- no country data file
+	- too many cards
+	
+6. add country long name to country data - DONE
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Extra Credit:
+
+Add ability to select which countries are displayed
+
+1. Use Bootstrap checkboxes.
+2. List of countries comes from country DB
+3. User selects countries before adding card
+	a. Error if add card before select country
+4. Card will only contain those countries selected
+5. Allow an indefinite number of countries to select.
+6. Add a clear selection button. - DONE
+7. Add a select all - DONE
+8. Selection rules:
+	a. If check a new box, just add to dictionary
+	b. If clear a box, remove it from dictionary
+
+
+

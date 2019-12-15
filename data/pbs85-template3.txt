@@ -1,0 +1,6 @@
+<!-- country selection checkbox template for Mustache -->
+<div class="col-lg-1 col-md-4 col-sm-6 mb-2 form-check form-check-inline">
+	<input type="checkbox" name="country" value="{{name}}" id="country_cbx_{{name}}" class="form-check-input">
+	<label for="country_cbx_{{name}}" class="form-check-label mr-2 text-" >{{name}}<img src="{{flagImage}}" style="width: 32px;" class="ml-1"><span class="sr-only">{{longName}}</span></label>
+</div>
+

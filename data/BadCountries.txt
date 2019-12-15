@@ -1,0 +1,10 @@
+{
+"AUX": {
+	},
+"AUD": {
+	"name": "AUD",
+	"flagImage": "flags/australia-flag-icon-32.png",
+	"isBase": false
+	}
+
+}

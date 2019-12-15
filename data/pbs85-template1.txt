@@ -1,0 +1,21 @@
+<!-- currency exchange rate card template for Mustache -->
+<div class="card" id="{{name}}">
+	
+	<h2 class="card-header h5 text-center">{{longname}} <img src="{{flagImage}}" alt="{{altName}}" style="width: 32px;">
+		<button id="{{name}}-btn" type="button" class="close" data-dismiss="alert" aria-label="Dismiss"><span aria-hidden="true">&times;</span></button>
+	</h2>
+
+	<div class="card-body">
+		<ul class="list-group list-group-flush">
+			{{#rateEtc}}
+			<li class="list-group-item">
+				<img src="{{flagImage}}" alt="{{name}} flag" style="width: 16px;"> 
+				{{name}} : {{rate}}
+				<small class="text-muted">{{longname}}</small>
+			</li>
+			{{/rateEtc}}
+		</ul>
+		
+		<div class="card-footer text-muted text-center p-3" id="{{name}}-date-div" style="font-size: 10pt">For {{date}}</div>
+	</div>
+</div>
